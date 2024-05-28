@@ -1,10 +1,8 @@
-﻿using System.Net.NetworkInformation;
-using ControlePedido.Domain.Adapters.Repositories;
+﻿using ControlePedido.Domain.Adapters.Repositories;
 using ControlePedido.Domain.Base;
 using ControlePedido.Domain.Entities;
 using ControlePedido.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace ControlePedido.Infra.Repositories
 {
@@ -21,6 +19,9 @@ namespace ControlePedido.Infra.Repositories
         public void Criar(Pedido pedido)
         {
             _context.Entry(pedido).State = EntityState.Added;
+
+            if(pedido.ClienteId == Guid.Empty)
+                _context.Entry(pedido.Cliente).State = EntityState.Unchanged;
 
             foreach (var item in pedido.Itens)
                 _context.Entry(item).State = EntityState.Added;

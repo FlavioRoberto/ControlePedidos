@@ -60,7 +60,7 @@ namespace ControlePedido.Domain.Entities
         public ICollection<PedidoItem> Itens { get; private set; }
         public ICollection<PedidoStatus> Status { get; private set; }
         public PedidoPagamento Pagamento { get; private set; }
-        public Cliente Cliente { get; private set; }
+        public Cliente? Cliente { get; private set; }
 
         protected Pedido() { }
 
@@ -76,8 +76,12 @@ namespace ControlePedido.Domain.Entities
 
         private Pedido(ICollection<PedidoItem> itens, Cliente cliente) : this(itens)
         {
-            Cliente = cliente;
-            ClienteId = cliente.Id;
+            if (cliente != null)
+            {
+                Cliente = cliente;
+                ClienteId = cliente.Id;
+            }
+
             AssertionConcern.AssertArgumentNotEquals(Guid.Empty, ClienteId, "Codigo do cliente não foi informado!");
         }
 
